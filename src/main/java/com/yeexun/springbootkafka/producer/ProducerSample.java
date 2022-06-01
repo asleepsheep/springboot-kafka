@@ -22,7 +22,7 @@ public class ProducerSample {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         //Producer异步发送演示
-        producerSend();
+//        producerSend();
 
 //        //Producer异步阻塞发送演示
 //        producerSyncSend();
@@ -31,7 +31,7 @@ public class ProducerSample {
 //        producerSendWithCallback();
 
         //Producer异步发送带回调函数和Partition负载均衡
-//        producerSendWithCallbackAndPartition();
+        producerSendWithCallbackAndPartition();
     }
 
     /**

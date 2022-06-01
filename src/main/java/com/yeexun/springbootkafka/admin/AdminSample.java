@@ -13,6 +13,7 @@ import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.apache.kafka.clients.admin.ListConsumerGroupsResult;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.NewPartitions;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.clients.admin.TopicListing;
@@ -35,7 +36,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class AdminSample {
 
-    private final static String TOPIC_NAME = "test";
+    private final static String TOPIC_NAME = "jiangfan-topic";
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 //        AdminClient adminClient = AdminSample.adminClient();
@@ -48,16 +49,22 @@ public class AdminSample {
 ////        获取topic列表
 //        topicLists();
 //
-//        //获取topic的描述
-//        describeTopics();
+        //获取topic的描述
+        describeTopics();
 
-//        //修改config
+        //添加partition
+        createPartition();
+
+
+
+////        //修改config
 //        alterConfig();
-//        //查看config
+
+////        //查看config
 //        describeConfig();
 
         //查询所有group
-        getAllGroupsForTopic();
+//        getAllGroupsForTopic();
     }
 
     /**
@@ -237,5 +244,16 @@ public class AdminSample {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 创建新的partition
+     */
+    public static void createPartition() throws ExecutionException, InterruptedException {
+        AdminClient client = adminClient();
+
+        NewPartitions newPartitionRequest = NewPartitions.increaseTo(2);
+
+        client.createPartitions(Collections.singletonMap(TOPIC_NAME, newPartitionRequest)).all().get();
     }
 }

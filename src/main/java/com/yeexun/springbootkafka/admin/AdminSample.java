@@ -10,6 +10,7 @@ import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.DeleteTopicsResult;
 import org.apache.kafka.clients.admin.DescribeConfigsResult;
 import org.apache.kafka.clients.admin.DescribeTopicsResult;
+import org.apache.kafka.clients.admin.ListConsumerGroupOffsetsResult;
 import org.apache.kafka.clients.admin.ListConsumerGroupsResult;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
@@ -17,6 +18,8 @@ import org.apache.kafka.clients.admin.NewPartitions;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.clients.admin.TopicListing;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.config.ConfigResource;
 
 import java.lang.reflect.Array;
@@ -49,11 +52,11 @@ public class AdminSample {
 ////        获取topic列表
 //        topicLists();
 //
-        //获取topic的描述
-        describeTopics();
+//        //获取topic的描述
+//        describeTopics();
 
         //添加partition
-        createPartition();
+//        createPartition();
 
 
 
@@ -63,8 +66,11 @@ public class AdminSample {
 ////        //查看config
 //        describeConfig();
 
-        //查询所有group
+//        //查询所有group
 //        getAllGroupsForTopic();
+
+        //查询sonsumer的offset
+        getConsumerOffset();
     }
 
     /**
@@ -126,7 +132,6 @@ public class AdminSample {
     public static void delTopics() throws ExecutionException, InterruptedException {
         AdminClient adminClient = adminClient();
         DeleteTopicsResult deleteTopicsResult = adminClient.deleteTopics(Arrays.asList(TOPIC_NAME));
-
         deleteTopicsResult.all().get();
     }
 
@@ -252,8 +257,24 @@ public class AdminSample {
     public static void createPartition() throws ExecutionException, InterruptedException {
         AdminClient client = adminClient();
 
-        NewPartitions newPartitionRequest = NewPartitions.increaseTo(2);
+        NewPartitions newPartitionRequest = NewPartitions.increaseTo(3);
 
         client.createPartitions(Collections.singletonMap(TOPIC_NAME, newPartitionRequest)).all().get();
+    }
+
+
+    /**
+     * 创建新的partition
+     */
+    public static void getConsumerOffset() throws ExecutionException, InterruptedException {
+        AdminClient client = adminClient();
+
+        ListConsumerGroupOffsetsResult test = client.listConsumerGroupOffsets("test");
+
+        Map<TopicPartition, OffsetAndMetadata> topicPartitionOffsetAndMetadataMap = test.partitionsToOffsetAndMetadata().get();
+
+        topicPartitionOffsetAndMetadataMap.entrySet().stream().forEach(topicPartitionOffsetAndMetadataEntry -> {
+            System.out.println("partition是: " + topicPartitionOffsetAndMetadataEntry.getKey().partition() + ", offset是: " + topicPartitionOffsetAndMetadataEntry.getValue().offset());
+        });
     }
 }

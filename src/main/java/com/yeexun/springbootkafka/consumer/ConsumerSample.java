@@ -20,12 +20,12 @@ import java.util.Properties;
  */
 public class ConsumerSample {
 
-    private final static String TOPIC_NAME = "jiangfan-topic";
+    private final static String TOPIC_NAME = "new-topic";
 
     public static void main(String[] args) {
 //        committedOffset();
         //手动对每个partition进行提交
-//        committedOffsetWithPartition();
+        committedOffsetWithPartition();
 
         //手动订阅某些分区, 并提交offset
 //        committedOffsetWithPartition2();
@@ -96,7 +96,7 @@ public class ConsumerSample {
         Properties props = new Properties();
 
         props.setProperty("bootstrap.servers", "localhost:9092");
-        props.setProperty("group.id", "test");
+        props.setProperty("group.id", "test3");
         props.setProperty("enable.auto.commit", "false");
         props.setProperty("auto.commit.interval.ms", "1000");
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

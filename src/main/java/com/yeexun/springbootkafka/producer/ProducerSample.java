@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
  */
 public class ProducerSample {
 
-    private final static String TOPIC_NAME = "jiangfan-topic";
+    private final static String TOPIC_NAME = "new-topic";
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         //Producer异步发送演示
@@ -54,7 +54,7 @@ public class ProducerSample {
         Producer<String, String> producer = new KafkaProducer<>(properties);
 
         //消息对象 - ProducerRecord
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 30; i++) {
             ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, "key-" + i, "value-" + i);
 
             producer.send(record);

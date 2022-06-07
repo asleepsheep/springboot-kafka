@@ -1,6 +1,1 @@
-# 连接kafka集群
-spring.kafka.bootstrap-servers= localhost:9092
 
-#key value的序列化
-spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
-spring.kafka.producer.value-serializer=org.apache.kafka.common.serialization.StringSerializer

@@ -69,7 +69,7 @@ public class AdminSample {
 //        //查询所有group
 //        getAllGroupsForTopic();
 
-        //查询sonsumer的offset
+        //查询Consumer的offset
         getConsumerOffset();
     }
 
@@ -269,12 +269,25 @@ public class AdminSample {
     public static void getConsumerOffset() throws ExecutionException, InterruptedException {
         AdminClient client = adminClient();
 
-        ListConsumerGroupOffsetsResult test = client.listConsumerGroupOffsets("test");
+        client.listConsumerGroups().all().get().stream().forEach(consumerGroupListing -> {
+            String groupId = consumerGroupListing.groupId();
 
-        Map<TopicPartition, OffsetAndMetadata> topicPartitionOffsetAndMetadataMap = test.partitionsToOffsetAndMetadata().get();
+            ListConsumerGroupOffsetsResult test = client.listConsumerGroupOffsets(groupId);
 
-        topicPartitionOffsetAndMetadataMap.entrySet().stream().forEach(topicPartitionOffsetAndMetadataEntry -> {
-            System.out.println("partition是: " + topicPartitionOffsetAndMetadataEntry.getKey().partition() + ", offset是: " + topicPartitionOffsetAndMetadataEntry.getValue().offset());
+            Map<TopicPartition, OffsetAndMetadata> topicPartitionOffsetAndMetadataMap = null;
+            try {
+                topicPartitionOffsetAndMetadataMap = test.partitionsToOffsetAndMetadata().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            topicPartitionOffsetAndMetadataMap.entrySet().stream().forEach(topicPartitionOffsetAndMetadataEntry -> {
+                System.out.println("该groupId是:" + groupId + ", partition是: " + topicPartitionOffsetAndMetadataEntry.getKey().partition() + ", offset是: " + topicPartitionOffsetAndMetadataEntry.getValue().offset());
+            });
         });
+
+
     }
 }
